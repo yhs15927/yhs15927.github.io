@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>Java学习之设计模式-创建式模式 | YHS努力前行</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="Java" />
+    
+    <meta name="description" content="##单例模式所谓单例模式，采取一定的方法保证在整个软件系统中，某个类只能存在一个对象实例，且该类只提供一个取得其对象实例的方法（静态方法）使用场景：需要频繁创建和销毁对象，创建重量级对象，经常用到的对象，工具类对象等1.饿汉式（静态变量）：构造器私有化，在类的加载时候实例化，提供一个方法获取该实例对象优点：写法简单，在类装载的时候完成实例化，避免线程同步问题缺点：没有达到Lazy Loading">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java学习之设计模式-创建式模式">
+<meta property="og:url" content="http://example.com/2020/11/14/Study/index.html">
+<meta property="og:site_name" content="YHS努力前行">
+<meta property="og:description" content="##单例模式所谓单例模式，采取一定的方法保证在整个软件系统中，某个类只能存在一个对象实例，且该类只提供一个取得其对象实例的方法（静态方法）使用场景：需要频繁创建和销毁对象，创建重量级对象，经常用到的对象，工具类对象等1.饿汉式（静态变量）：构造器私有化，在类的加载时候实例化，提供一个方法获取该实例对象优点：写法简单，在类装载的时候完成实例化，避免线程同步问题缺点：没有达到Lazy Loading">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/11/14/Study/img/java.jpg">
+<meta property="article:published_time" content="2020-11-14T04:56:56.000Z">
+<meta property="article:modified_time" content="2020-11-16T06:07:57.108Z">
+<meta property="article:author" content="F0rest">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/11/14/Study/img/java.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="YHS努力前行" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/images/java.jpg" />
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/titillium-web/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/3.5.0/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                    <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Web%E5%AD%A6%E4%B9%A0/">Web学习</a><ul class="main-nav-list-child"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Web%E5%AD%A6%E4%B9%A0/Java%E5%AD%A6%E4%B9%A0/">Java学习</a></li></ul></li></ul>
+                                
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Web%E5%AD%A6%E4%B9%A0/">Web学习</a><i class="icon fa fa-angle-right"></i><a class="page-title-link" href="/categories/Web%E5%AD%A6%E4%B9%A0/Java%E5%AD%A6%E4%B9%A0/">Java学习</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-Study" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Java学习之设计模式-创建式模式
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2020/11/14/Study/" class="article-date">
+       <time datetime="2020-11-14T04:56:56.000Z" itemprop="datePublished">2020-11-14</time>
+    </a>
+  </div>
+
+
+<div class="article-date">
+  <i class="fa fa-calendar-plus-o"></i>
+  <a href="/2020/11/14/Study/" class="article-date">
+     <time datetime="2020-11-16T06:07:57.108Z" itemprop="dateModified">2020-11-16</time>
+  </a>
+</div>
+
+
+                
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Java/" rel="tag">Java</a>
+    </div>
+
+                
+
+                
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            
+
+            
+
+            
+
+            <p><img src="./img/java.jpg" alt="Alt text"></p>
+<p>##单例模式<br>所谓单例模式，采取一定的方法保证在整个软件系统中，某个类只能存在一个对象实例，且该类只提供一个取得其对象实例的方法（静态方法）<br>使用场景：需要频繁创建和销毁对象，创建重量级对象，经常用到的对象，工具类对象等<br>1.饿汉式（静态变量）：<br>构造器私有化，在类的加载时候实例化，提供一个方法获取该实例对象<br>优点：写法简单，在类装载的时候完成实例化，避免线程同步问题<br>缺点：没有达到Lazy Loading效果，如果从始至终未用到实例，造成资源浪费<br>2.饿汉式（静态代码块）：<br>与静态变量一致，将实例化放在静态代码块中<br>3.懒汉式（线程不安全）：<br>提供一个静态的公有方法，使用该方法时，才去创建instance<br>优点：起到了Lazy Loading的效果，但只能在单线程下使用<br>缺点：一个线程进入了判断语句块，未来得及往下执行，另一个线程也进入判断语句，导致产生多个实例<br>4.懒汉式（线程安全，同步方法）：<br>提供一个静态的公有方法，添加synchronize同步，解决线程安全问题<br>优点：解决了线程不安全问题<br>缺点：效率很低，多个线程想获得类的实例时候，都要进行同步进去执行，导致效率很低<br>5.懒汉式（线程不安全，同步代码块）：<br>在静态公有方法中，同步机制放在创建实例，没有意义，本意想改进第四步，情况与第三个类似，如果进入了判断语句，对象每次都会被创建，只是时间问题<br>6.双重检查（线程安全）：<br>提供一个静态的公有方法，加入双重检查代码，解决线程安全问题，同时解决懒加载问题，解决了第三步的频繁执行synchronize。只需创建一次，其他线程不用经过synchronize，直接判断是否存在实例对象，刚创建的时候可能会有少量线程同时进入。<br>7.静态内部类（线程安全）<br>使用静态内部类的方式，提供一个公有方法，线程可通过公有方法调用静态内部类的生成实例，在类装载时，静态内部类不会执行，而是需要实例化，调用方法时，才会执行静态内部类<br>类的静态属性只会在第一次加载类的时候初始化，jvm在类的初始化时，别的线程无法进入，保证了线程安全性<br>8.枚举<br>能避免多线程同步问题，防止反序列化重新创建对象。<br>简单工厂模式：<br>由一个工厂对象决定创建出哪一种产品类的实例：定义了一个创建对象的类，由这个类来封装实例化对象的行为<br>将客户端和具体产品间插入一个分界线，增加一个工厂，客户端和工厂交互，工厂内部和具体产品交互，具体产品修改时，客户端不会跟着一起进行修改，解耦合。<br>但是：<br>产品增多后，简单工厂就会变得很臃肿，客户端需要扩展具体产品类后，简单工厂需要修改，违反开闭原则<br>?<br>工厂方法模式：<br>当有新的需求，可以创建不同的简单工厂类，考虑到软件的规模，以及软件的可维护性，可扩展性，需要采取工厂方法模式<br>客户端需要扩展具体产品类后，只需要扩展一个新的工厂方法而已<br>但是：<br>如果有多个产品等级，工厂的数量就会跟着增多，每增加一个产品等级，就要增加一个工厂<br>抽象工厂模式：<br>定义一个接口，用于创建相关或有依赖关系的对象簇，无需指明具体的类，可以将简单工厂模式和工厂方法模式整合<br>合并工厂方法的诸多工厂<br>产品等级比较固定时，可以考虑使用抽象工厂、如果产品等级经常变化，则不建议使用抽象工厂。产品等级即是抽象工厂接口类里的方法，如果经常变，则会导致其下的所有实现类都会改变<br>?<br>原型模式：<br>使用Clone方法（实现cloneable接口，重写Object的方法），clone方法不会引起构造器的调用，clone方法时直接复制内存中的二进制，clone出的对象地址不一致<br>浅拷贝：把原来的对象的值，原样复制给clone对象，对于引用类型，把地址值给了clone对象，如果clone对象对引用类型的属性进行修改，原有对象的该引用类型的属性也会被改变<br>深拷贝：把原来对象的值，复制给clone对象，对于引用类型，同样做一次clone，新建了引用类型对象，把引用对象的里面的属性复制给新的引用类型对象，从而使得clone出来的对象中，里面的引用对象和原来对象的引用对象的地址不一样，不会影响<br>如果对象里引用类型里还有引用类型，比较麻烦。<br>使用序列化进行深拷贝：<br>方法重写时，不能抛出比父类更多的异常，只能try catch<br>使用序列化，输出流，对象输出流，把对象写进去，输入流，对象输入流，把对象读出来。序列化时，对象的所有属性层级关系会被序列化自动处理，反序列化，得到一个新的对象，与原来的对象地址不一样<br>问题：序列化的目标位置时写死的，位置不应该写死，Linux下和Windows下的路径格式不一致？<br>OutputStream out = new FileOutputStream(“F:\a.txt”);<br>ObjectOutputStream oos = new ObjectOutputStream(out);<br>Oos.writeObject(this);<br>Oos.close;<br>InputStream in = new FileInputStream(“F:\a.txt”);<br>ObjectInputStream ois = new ObjectInputStream(in);<br>Object clone = ois.readObject();<br>Ois.close();<br>?<br>解决：写到内存里ByteArrayOutputStream out = new ByteArrayOutputStream();<br>ObjectOutputStream oos = new ObjectOutputStream(out);<br>?<br>Byte[] bb = out.toByteArray();<br>InputStream in = new ByteArrayInputStream(bb);<br>ObjectInputStream ois = new ObjectInputStream(in);<br>Object clone = ois.readObject();<br>Ois.close();<br>重温IO流！向上转型，子类独有方法失效，需要取消向上转型<br>因此，java里创建对象的四种方法：1.使用构造器；2.反射机制；3.clone方法；4.序列化与反序列化<br>原型模式的注意：</p>
+<ol>
+<li>创建新的对象比较复杂时，可以直接使用原型模式简化创建过程，提高效率。</li>
+<li>不用重复初始化对象，而是动态获得对象运行时状态</li>
+<li>缺点：要为每一个类配置一个克隆方法，对已有的方法进行改造时，要修改其源代码，违反ocp原则<br>建造者模式：<br>由何引出？<br>①客户端需要某个实例，需要自己去对其进行配置属性；违反迪米特法则，因此需要建立一个建造者，将配置工作交付建造者<br>②每一种不同的实例，对应每一种不同的配置属性，但属性类是一样的，做重复的工作，且如果有一个实例建造者漏掉了某一步，该值就会为null，以后就可能出现Np异常，因此需要用一个统一化接口管理创建步骤，即让每个配置建造者去实现创建接口<br>③有了建造者接口，不会遗漏属性配置步骤，每个builder都要调用set方法，代码重复，需要客户端执行创建步骤，可能会遗漏某些步骤，且违反迪米特法则，因此需要指派一个指挥者进行步骤稳定执行<br>④创建指挥者，具体实现建造者接口的各个步骤，根据客户端的需求传入相关属性，其实就相当于把③步骤的创建封装起来。<br>优点：</li>
+<li>创建对象的过程是稳定不变的，用一个接口控制稳定过程</li>
+<li>创建对象的过程只写了一次，没有重复代码</li>
+<li>当需要扩展，不用修改源码，符合开闭原则<br>建造者与工厂模式的区别：<br>工厂模式只需要一个简单的生产产品<br>建造者模式更注重生产出的产品后，对其进行属性赋值的过程</li>
+</ol>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://example.com/2020/11/14/Study/" data-id="ckhhds5su0000w8w4hdo655hr" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "author": {
+            "@type": "Person",
+            "name": "F0rest"
+        },
+        "headline": "Java学习之设计模式-创建式模式",
+        "image": "http://example.com./img/java.jpg",
+        "keywords": "Java",
+        "genre": "Web学习 Java学习",
+        "datePublished": "2020-11-14",
+        "dateCreated": "2020-11-14",
+        "dateModified": "2020-11-16",
+        "url": "http://example.com/2020/11/14/Study/",
+        "description": "
+##单例模式所谓单例模式，采取一定的方法保证在整个软件系统中，某个类只能存在一个对象实例，且该类只提供一个取得其对象实例的方法（静态方法）使用场景：需要频繁创建和销毁对象，创建重量级对象，经常用到的对象，工具类对象等1.饿汉式（静态变量）：构造器私有化，在类的加载时候实例化，提供一个方法获取该实例对象优点：写法简单，在类装载的时候完成实例化，避免线程同步问题缺点：没有达到Lazy Loading",
+        "wordCount": 48
+    }
+</script>
+
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="stack-overflow" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-stack-overflow"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ppoffice/hexo-theme-hueman" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="weibo" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-weibo"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2020/11/14/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">Hello World</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/11/14/Study/" class="thumbnail">
+    
+    
+        <span style="background-image:url(./img/java.jpg)" alt="Java学习之设计模式-创建式模式" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web%E5%AD%A6%E4%B9%A0/">Web学习</a><i class="icon fa fa-angle-right"></i><a class="article-category-link" href="/categories/Web%E5%AD%A6%E4%B9%A0/Java%E5%AD%A6%E4%B9%A0/">Java学习</a></p>
+                            <p class="item-title"><a href="/2020/11/14/Study/" class="title">Java学习之设计模式-创建式模式</a></p>
+                            <p class="item-date"><time datetime="2020-11-14T04:56:56.000Z" itemprop="datePublished">2020-11-14</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/11/14/hello-world/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2020/11/14/hello-world/" class="title">Hello World</a></p>
+                            <p class="item-date"><time datetime="2020-11-14T04:02:44.713Z" itemprop="datePublished">2020-11-14</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Web%E5%AD%A6%E4%B9%A0/">Web学习</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Web%E5%AD%A6%E4%B9%A0/Java%E5%AD%A6%E4%B9%A0/">Java学习</a><span class="category-list-count">1</span></li></ul></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2020 F0rest</p>
+                
+                <p>Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="https://github.com/ppoffice" target="_blank">PPOffice</a></p>
+                
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+    </div>
+    
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'http://example.com/2020/11/14/Study/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+    
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618},"display":{"superSample":2,"width":150,"height":300,"position":"left","hOffset":0,"vOffset":20},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
